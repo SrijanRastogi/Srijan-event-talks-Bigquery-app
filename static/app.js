@@ -26,12 +26,16 @@ const whatsappShareBtn = document.getElementById('whatsapp-share-btn');
 const whatsappPreviewBtn = document.getElementById('whatsapp-preview-btn');
 const retryBtn = document.getElementById('retry-btn');
 const themeToggleBtn = document.getElementById('theme-toggle-btn');
+const linkedinShareBtn = document.getElementById('linkedin-share-btn');
+const instagramShareBtn = document.getElementById('instagram-share-btn');
 
 // Modal Elements
 const previewModal = document.getElementById('preview-modal');
 const closeModalBtn = document.getElementById('close-modal');
 const modalCancelBtn = document.getElementById('modal-cancel-btn');
 const modalShareBtn = document.getElementById('modal-share-btn');
+const modalCopyLinkedinBtn = document.getElementById('modal-copy-linkedin-btn');
+const modalCopyInstagramBtn = document.getElementById('modal-copy-instagram-btn');
 const whatsappTextPreview = document.getElementById('whatsapp-text-preview');
 
 // Initialize
@@ -111,14 +115,18 @@ function setupEventListeners() {
     selectAllBtn.addEventListener('click', selectAllVisible);
     deselectAllBtn.addEventListener('click', clearSelection);
     
-    // WhatsApp sharing
+    // Sharing buttons
     whatsappShareBtn.addEventListener('click', shareToWhatsApp);
+    linkedinShareBtn.addEventListener('click', shareToLinkedIn);
+    instagramShareBtn.addEventListener('click', shareToInstagram);
     whatsappPreviewBtn.addEventListener('click', openPreviewModal);
     
     // Modal
     closeModalBtn.addEventListener('click', closePreviewModal);
     modalCancelBtn.addEventListener('click', closePreviewModal);
     modalShareBtn.addEventListener('click', shareToWhatsApp);
+    modalCopyLinkedinBtn.addEventListener('click', shareToLinkedIn);
+    modalCopyInstagramBtn.addEventListener('click', shareToInstagram);
     
     // Close modal if clicked outside content
     previewModal.addEventListener('click', (e) => {
@@ -266,17 +274,35 @@ function renderTimeline() {
             const quickActions = document.createElement('div');
             quickActions.className = 'card-quick-actions';
             
+            const linkedinBtn = document.createElement('button');
+            linkedinBtn.className = 'icon-btn-share';
+            linkedinBtn.title = 'Copy and open LinkedIn';
+            linkedinBtn.innerHTML = '<span class="material-icons-round">work</span>';
+            linkedinBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Avoid card toggle
+                shareSingleLinkedIn(entry.date, update);
+            });
+            
+            const instagramBtn = document.createElement('button');
+            instagramBtn.className = 'icon-btn-share';
+            instagramBtn.title = 'Copy and open Instagram';
+            instagramBtn.innerHTML = '<span class="material-icons-round">photo_camera</span>';
+            instagramBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Avoid card toggle
+                shareSingleInstagram(entry.date, update);
+            });
+            
             const shareBtn = document.createElement('button');
             shareBtn.className = 'icon-btn-share';
             shareBtn.title = 'Share to WhatsApp';
-            shareBtn.innerHTML = '<span class="material-icons-round">share</span>';
-            
-            // Handle individual share click
+            shareBtn.innerHTML = '<span class="material-icons-round">chat</span>';
             shareBtn.addEventListener('click', (e) => {
                 e.stopPropagation(); // Avoid card toggle
                 shareSingleUpdate(entry.date, update);
             });
             
+            quickActions.appendChild(linkedinBtn);
+            quickActions.appendChild(instagramBtn);
             quickActions.appendChild(shareBtn);
             headerRow.appendChild(typeBadge);
             headerRow.appendChild(quickActions);
@@ -511,13 +537,107 @@ function shareToWhatsApp() {
     window.open(whatsappUrl, '_blank');
 }
 
-// Share a Single Update directly
+// Share Selected Updates to LinkedIn
+function shareToLinkedIn() {
+    const text = generateWhatsAppText();
+    if (!text) return;
+    
+    copyToClipboard(text, "Changelog copied! Redirecting to LinkedIn...");
+    setTimeout(() => {
+        window.open('https://www.linkedin.com/feed/', '_blank');
+    }, 1000);
+}
+
+// Share Selected Updates to Instagram
+function shareToInstagram() {
+    const text = generateWhatsAppText();
+    if (!text) return;
+    
+    copyToClipboard(text, "Changelog copied! Redirecting to Instagram...");
+    setTimeout(() => {
+        window.open('https://www.instagram.com/', '_blank');
+    }, 1000);
+}
+
+// Share a Single Update directly to WhatsApp
 function shareSingleUpdate(date, update) {
     const mdContent = convertHtmlToWhatsappMarkdown(update.content);
     const text = `*BigQuery Release Notes Update* 🚀\n\n📅 *${date}*\n• *[${update.type}]* ${mdContent}\n\n_Shared via BigQuery Changelog_`;
     
     const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
     window.open(whatsappUrl, '_blank');
+}
+
+// Share a Single Update to LinkedIn
+function shareSingleLinkedIn(date, update) {
+    const mdContent = convertHtmlToWhatsappMarkdown(update.content);
+    const text = `BigQuery Release Notes Update 🚀\n\n📅 ${date}\n• [${update.type}] ${mdContent}\n\nShared via BigQuery Changelog`;
+    
+    copyToClipboard(text, "Update copied! Redirecting to LinkedIn...");
+    setTimeout(() => {
+        window.open('https://www.linkedin.com/feed/', '_blank');
+    }, 1000);
+}
+
+// Share a Single Update to Instagram
+function shareSingleInstagram(date, update) {
+    const mdContent = convertHtmlToWhatsappMarkdown(update.content);
+    const text = `BigQuery Release Notes Update 🚀\n\n📅 ${date}\n• [${update.type}] ${mdContent}\n\nShared via BigQuery Changelog`;
+    
+    copyToClipboard(text, "Update copied! Redirecting to Instagram...");
+    setTimeout(() => {
+        window.open('https://www.instagram.com/', '_blank');
+    }, 1000);
+}
+
+// Copy to Clipboard Utility
+function copyToClipboard(text, successMessage) {
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+            showToast(successMessage);
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+            showFallbackCopy(text, successMessage);
+        });
+    } else {
+        showFallbackCopy(text, successMessage);
+    }
+}
+
+// Fallback copy for non-https/older systems
+function showFallbackCopy(text, successMessage) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    textArea.style.left = "-999999px";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+        document.execCommand('copy');
+        showToast(successMessage);
+    } catch (err) {
+        console.error('Fallback copy failed: ', err);
+        showToast('Failed to copy to clipboard.');
+    }
+    document.body.removeChild(textArea);
+}
+
+// Toast Notification Utility
+function showToast(message) {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+    
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `<span class="material-icons-round" style="color: var(--primary); font-size: 16px;">check_circle</span><span>${message}</span>`;
+    
+    container.appendChild(toast);
+    
+    // Auto remove
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
 }
 
 // Modal management

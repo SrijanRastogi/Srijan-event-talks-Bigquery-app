@@ -111,11 +111,14 @@
             </div>
             <div class="whatsapp-actions">
                 <button id="whatsapp-preview-btn" class="btn btn-secondary-flat">Preview</button>
+                <button id="linkedin-share-btn" class="btn btn-primary-flat btn-linkedin">
+                    Share to LinkedIn
+                </button>
+                <button id="instagram-share-btn" class="btn btn-primary-flat btn-instagram">
+                    Copy for Instagram
+                </button>
                 <button id="whatsapp-share-btn" class="btn btn-primary-flat btn-whatsapp">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.262 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.717-1.456L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.97C16.528 2.017 14.077 1.001 11.998 1.001c-5.439 0-9.87 4.388-9.874 9.804 0 1.63.435 3.22 1.262 4.643L2.34 21.055l4.307-1.901zm10.963-4.968c-.302-.15-1.791-.882-2.069-.982-.277-.1-.48-.15-.68.15-.2.3-.778.982-.953 1.182-.175.2-.35.225-.653.075-.302-.15-1.276-.47-2.43-1.499-.896-.799-1.502-1.787-1.678-2.088-.175-.3-.018-.462.13-.611.137-.134.302-.35.453-.524.15-.175.2-.3.3-.5.1-.2.05-.375-.025-.525-.075-.15-.68-1.637-.93-2.238-.243-.584-.49-.505-.68-.515-.175-.008-.375-.01-.575-.01-.2 0-.525.075-.8 1.084-.275 1.009-.725 2.164-.789 2.29-.064.125-.101.27-.013.447.087.177 1.432 2.188 3.472 3.07.485.209.865.335 1.161.429.487.155.93.133 1.28.081.39-.058 1.79-.73 2.043-1.436.254-.706.254-1.312.178-1.436-.076-.125-.277-.2-.58-.35z"/>
-                    </svg>
-                    Post to WhatsApp
+                    Send to WhatsApp
                 </button>
             </div>
         </div>
@@ -125,23 +128,28 @@
     <div id="preview-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>WhatsApp Post Preview</h2>
+                <h2>Post Preview</h2>
                 <button class="close-modal-btn" id="close-modal">
                     <span class="material-icons-round">close</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p class="modal-description">Updates will be compiled into WhatsApp-formatted markdown text:</p>
+                <p class="modal-description">Updates will be compiled into structured markdown text:</p>
                 <div class="preview-box-container">
                     <pre id="whatsapp-text-preview" class="preview-box"></pre>
                 </div>
             </div>
             <div class="modal-footer">
                 <button id="modal-cancel-btn" class="btn btn-secondary-flat">Close</button>
+                <button id="modal-copy-linkedin-btn" class="btn btn-primary-flat btn-linkedin">Copy for LinkedIn</button>
+                <button id="modal-copy-instagram-btn" class="btn btn-primary-flat btn-instagram">Copy for Instagram</button>
                 <button id="modal-share-btn" class="btn btn-primary-flat btn-whatsapp">Send to WhatsApp</button>
             </div>
         </div>
     </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
 
     <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
