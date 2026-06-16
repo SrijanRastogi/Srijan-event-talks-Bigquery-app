@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BigQuery Changelog</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Material Icons Round -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="dark-theme">
+    <div class="app-wrapper">
+        <!-- Top Navigation Bar -->
+        <header class="app-navbar">
+            <div class="nav-brand">
+                <span class="brand-title">BigQuery Changelog</span>
+                <span class="brand-dot"></span>
+            </div>
+            
+            <div class="nav-controls">
+                <div class="search-box">
+                    <span class="material-icons-round search-icon">search</span>
+                    <input type="text" id="search-input" placeholder="Search logs...">
+                    <button id="clear-search" class="clear-btn" style="display: none;">
+                        <span class="material-icons-round">close</span>
+                    </button>
+                </div>
+                
+                <button id="theme-toggle-btn" class="icon-btn" title="Toggle Light/Dark Theme">
+                    <span class="material-icons-round theme-icon">light_mode</span>
+                </button>
+                
+                <button id="refresh-btn" class="btn btn-navbar" title="Refresh Feed">
+                    <span id="refresh-spinner" class="material-icons-round">refresh</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Sub-navigation Filter Bar (Sticky) -->
+        <div class="filter-bar">
+            <div class="filter-inner">
+                <div class="filter-pills" id="type-filters">
+                    <button class="filter-pill active" data-type="all">All updates</button>
+                    <button class="filter-pill" data-type="Feature">Features</button>
+                    <button class="filter-pill" data-type="Fix">Fixes</button>
+                    <button class="filter-pill" data-type="Issue">Issues</button>
+                    <button class="filter-pill" data-type="Changed">Changes</button>
+                    <button class="filter-pill" data-type="Deprecated">Deprecated</button>
+                    <button class="filter-pill" data-type="General">General</button>
+                </div>
+                
+                <div class="filter-divider"></div>
+                
+                <div class="selection-actions">
+                    <button id="select-all-btn" class="action-link-btn">Select visible</button>
+                    <button id="deselect-all-btn" class="action-link-btn">Clear selection</button>
+                </div>
+            </div>
+            
+            <!-- Metadata and Stats bar -->
+            <div class="filter-stats">
+                <span class="stat-item"><span id="stat-total-releases">0</span> days logged</span>
+                <span class="stat-bullet">•</span>
+                <span class="stat-item"><span id="stat-total-updates">0</span> updates matching</span>
+                <span class="stat-bullet">•</span>
+                <span id="last-updated-time" class="stat-item">Not refreshed</span>
+            </div>
+        </div>
+
+        <!-- Main Changelog Feed -->
+        <main class="feed-container">
+            <!-- Loading State -->
+            <div id="loading-state" class="feed-state-box">
+                <div class="loading-bar"></div>
+                <p>Loading latest release notes...</p>
+            </div>
+
+            <!-- Error State -->
+            <div id="error-state" class="feed-state-box" style="display: none;">
+                <span class="material-icons-round state-icon error">warning_amber</span>
+                <h3>Feed fetch failed</h3>
+                <p id="error-message">Could not connect to the Google Cloud release feed.</p>
+                <button id="retry-btn" class="btn btn-retry">Retry Fetch</button>
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="feed-state-box" style="display: none;">
+                <span class="material-icons-round state-icon">find_in_page</span>
+                <h3>No updates match the current criteria</h3>
+                <p>Try clearing your search query or filters.</p>
+            </div>
+
+            <!-- Timeline Feed -->
+            <div id="timeline-container" class="changelog-feed">
+                <!-- Dynamic timeline structure goes here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Minimalist Floating Share Toolbar -->
+    <div id="whatsapp-bar" class="whatsapp-bar">
+        <div class="whatsapp-bar-content">
+            <div class="selection-info">
+                <span class="material-icons-round selection-bullet">radio_button_checked</span>
+                <span id="selected-count-text">0 updates selected</span>
+            </div>
+            <div class="whatsapp-actions">
+                <button id="whatsapp-preview-btn" class="btn btn-secondary-flat">Preview</button>
+                <button id="whatsapp-share-btn" class="btn btn-primary-flat btn-whatsapp">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.262 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.717-1.456L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.97C16.528 2.017 14.077 1.001 11.998 1.001c-5.439 0-9.87 4.388-9.874 9.804 0 1.63.435 3.22 1.262 4.643L2.34 21.055l4.307-1.901zm10.963-4.968c-.302-.15-1.791-.882-2.069-.982-.277-.1-.48-.15-.68.15-.2.3-.778.982-.953 1.182-.175.2-.35.225-.653.075-.302-.15-1.276-.47-2.43-1.499-.896-.799-1.502-1.787-1.678-2.088-.175-.3-.018-.462.13-.611.137-.134.302-.35.453-.524.15-.175.2-.3.3-.5.1-.2.05-.375-.025-.525-.075-.15-.68-1.637-.93-2.238-.243-.584-.49-.505-.68-.515-.175-.008-.375-.01-.575-.01-.2 0-.525.075-.8 1.084-.275 1.009-.725 2.164-.789 2.29-.064.125-.101.27-.013.447.087.177 1.432 2.188 3.472 3.07.485.209.865.335 1.161.429.487.155.93.133 1.28.081.39-.058 1.79-.73 2.043-1.436.254-.706.254-1.312.178-1.436-.076-.125-.277-.2-.58-.35z"/>
+                    </svg>
+                    Post to WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clean Preview Modal -->
+    <div id="preview-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>WhatsApp Post Preview</h2>
+                <button class="close-modal-btn" id="close-modal">
+                    <span class="material-icons-round">close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-description">Updates will be compiled into WhatsApp-formatted markdown text:</p>
+                <div class="preview-box-container">
+                    <pre id="whatsapp-text-preview" class="preview-box"></pre>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="modal-cancel-btn" class="btn btn-secondary-flat">Close</button>
+                <button id="modal-share-btn" class="btn btn-primary-flat btn-whatsapp">Send to WhatsApp</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

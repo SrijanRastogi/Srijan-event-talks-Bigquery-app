@@ -1,0 +1,869 @@
+/* ==========================================================================
+   THEME STYLES (Light & Dark)
+   ========================================================================== */
+:root {
+    --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, SF Mono, Menlo, monospace;
+    --transition-fast: 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Dark Theme Variables (Default) */
+body.dark-theme {
+    --bg-app: #09090b;             /* Pure deep black */
+    --bg-navbar: #09090b;
+    --bg-subnav: #121215;
+    --bg-hover: #18181b;
+    --bg-selected: rgba(59, 130, 246, 0.08);
+    --border-color: #27272a;        /* Crisp zinc borders */
+    --checkbox-border: #52525b;     /* High contrast checkbox border */
+    
+    --text-primary: #f4f4f5;
+    --text-secondary: #d4d4d8;      /* Popped text contrast (old: #a1a1aa) */
+    --text-muted: #a1a1aa;          /* Popped text contrast (old: #52525b) */
+    
+    --primary: #3b82f6;            /* Minimal blue accent */
+    --primary-hover: #60a5fa;
+    --primary-muted: rgba(59, 130, 246, 0.15);
+    
+    --whatsapp: #22c55e;
+    --whatsapp-hover: #4ade80;
+    
+    /* Category Colors */
+    --color-feature: #4ade80;
+    --color-fix: #60a5fa;
+    --color-issue: #f87171;
+    --color-changed: #c084fc;
+    --color-deprecated: #fb923c;
+    --color-general: #a1a1aa;
+}
+
+/* Light Theme Variables */
+body.light-theme {
+    --bg-app: #fafafa;             /* Clean paper white */
+    --bg-navbar: #ffffff;
+    --bg-subnav: #e4e4e7;
+    --bg-hover: #f4f4f5;
+    --bg-selected: rgba(37, 99, 235, 0.06);
+    --border-color: #d4d4d8;        /* Popped borders (old: #e4e4e7) */
+    --checkbox-border: #8b949e;     /* High contrast checkbox border */
+    
+    --text-primary: #09090b;
+    --text-secondary: #27272a;      /* Popped dark slate text (old: #71717a) */
+    --text-muted: #52525b;          /* Popped dark gray text (old: #a1a1aa) */
+    
+    --primary: #2563eb;            /* Strong blue accent */
+    --primary-hover: #1d4ed8;
+    --primary-muted: rgba(37, 99, 235, 0.08);
+    
+    --whatsapp: #16a34a;
+    --whatsapp-hover: #15803d;
+    
+    /* Category Colors */
+    --color-feature: #16a34a;
+    --color-fix: #2563eb;
+    --color-issue: #dc2626;
+    --color-changed: #7c3aed;
+    --color-deprecated: #ea580c;
+    --color-general: #52525b;
+}
+
+/* ==========================================================================
+   BASE STYLES
+   ========================================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-app);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.app-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* ==========================================================================
+   TOP NAVIGATION BAR
+   ========================================================================== */
+.app-navbar {
+    height: 64px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-navbar);
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.brand-title {
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: -0.2px;
+    color: var(--text-primary);
+}
+
+.brand-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--primary);
+}
+
+.nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Search Box */
+.search-box {
+    position: relative;
+    width: 200px;
+    transition: width var(--transition-fast);
+}
+
+.search-box:focus-within {
+    width: 280px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    font-size: 16px;
+}
+
+.search-box input {
+    width: 100%;
+    background: var(--bg-hover);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 6px 12px 6px 28px;
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    outline: none;
+    transition: border-color var(--transition-fast);
+}
+
+.search-box input:focus {
+    border-color: var(--text-secondary);
+}
+
+.clear-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+}
+
+.clear-btn span {
+    font-size: 14px;
+}
+
+/* Icon Buttons */
+.icon-btn {
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all var(--transition-fast);
+}
+
+.icon-btn:hover {
+    color: var(--text-primary);
+    background-color: var(--bg-hover);
+    border-color: var(--text-secondary);
+}
+
+.icon-btn span {
+    font-size: 16px;
+}
+
+/* General Navbar buttons */
+.btn-navbar {
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all var(--transition-fast);
+}
+
+.btn-navbar:hover {
+    color: var(--text-primary);
+    background-color: var(--bg-hover);
+}
+
+.btn-navbar span {
+    font-size: 16px;
+}
+
+/* ==========================================================================
+   SUB-NAV FILTER BAR (Linear style sticky outline)
+   ========================================================================== */
+.filter-bar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--bg-app);
+    border-bottom: 1px solid var(--border-color);
+    padding: 12px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filter-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* Outline Filter Pills */
+.filter-pills {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.filter-pill {
+    background: none;
+    border: none;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.filter-pill:hover {
+    background-color: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.filter-pill.active {
+    background-color: var(--primary-muted);
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.filter-divider {
+    flex: 1;
+}
+
+/* Selection link buttons */
+.selection-actions {
+    display: flex;
+    gap: 14px;
+}
+
+.action-link-btn {
+    background: none;
+    border: none;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.action-link-btn:hover {
+    color: var(--text-primary);
+}
+
+/* Metadata Stats block */
+.filter-stats {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.stat-bullet {
+    opacity: 0.5;
+}
+
+/* ==========================================================================
+   FEED TIMELINE LAYOUT (Split Date & Notes - Linear inspired)
+   ========================================================================== */
+.feed-container {
+    padding: 40px 0;
+}
+
+/* Loading/Empty state box */
+.feed-state-box {
+    border: 1px dashed var(--border-color);
+    border-radius: 8px;
+    padding: 60px 40px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.loading-bar {
+    width: 100px;
+    height: 2px;
+    background-color: var(--border-color);
+    position: relative;
+    overflow: hidden;
+    border-radius: 2px;
+}
+
+.loading-bar::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 100%;
+    background-color: var(--primary);
+    position: absolute;
+    left: -40px;
+    animation: loadingBarSlide 1.2s infinite ease-in-out;
+}
+
+@keyframes loadingBarSlide {
+    0% { left: -40px; }
+    100% { left: 100px; }
+}
+
+.state-icon {
+    font-size: 32px;
+    color: var(--text-muted);
+}
+
+.state-icon.error {
+    color: var(--color-issue);
+}
+
+.feed-state-box h3 {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.feed-state-box p {
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.btn-retry {
+    background-color: var(--text-primary);
+    color: var(--bg-app);
+    padding: 6px 14px;
+    border-radius: 4px;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* Changelog Feed Grouping */
+.changelog-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+}
+
+/* Single Timeline Node split */
+.timeline-node {
+    display: flex;
+    gap: 40px;
+    position: relative;
+}
+
+@media (max-width: 768px) {
+    .timeline-node {
+        flex-direction: column;
+        gap: 16px;
+    }
+}
+
+/* Left Date Column (Sticky) */
+.timeline-left {
+    width: 180px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.sticky-date {
+    position: sticky;
+    top: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.sticky-date h2 {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    color: var(--text-primary);
+}
+
+.sticky-date .date-badge {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+/* Right Content Column */
+.timeline-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid var(--border-color);
+}
+
+@media (max-width: 768px) {
+    .timeline-right {
+        border-left: none;
+        padding-left: 0;
+    }
+}
+
+/* Update Item - Elegant Row (No Cards!) */
+.update-card {
+    padding: 20px 24px;
+    display: flex;
+    gap: 16px;
+    cursor: pointer;
+    position: relative;
+    border-bottom: 1px solid var(--border-color);
+    background-color: transparent;
+    transition: background-color var(--transition-fast);
+}
+
+.update-card:last-child {
+    border-bottom: none;
+}
+
+.update-card:hover {
+    background-color: var(--bg-hover);
+}
+
+.update-card.selected {
+    background-color: var(--bg-selected);
+}
+
+.update-card.selected::before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: var(--primary);
+}
+
+/* Minimal Checkbox */
+.card-select-container {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 3px;
+}
+
+.custom-checkbox {
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--checkbox-border);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-app);
+    transition: all var(--transition-fast);
+}
+
+.update-card:hover .custom-checkbox {
+    border-color: var(--primary);
+}
+
+.update-card.selected .custom-checkbox {
+    border-color: var(--primary);
+    background-color: var(--primary);
+}
+
+.custom-checkbox span {
+    font-size: 12px;
+    color: var(--bg-navbar);
+    font-weight: 800;
+    opacity: 0;
+}
+
+.update-card.selected .custom-checkbox span {
+    opacity: 1;
+}
+
+/* Body and Typography */
+.card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+}
+
+.card-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Clean Category Outline Badges */
+.type-badge {
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    border: 1px solid transparent;
+}
+
+.type-badge.feature {
+    border-color: rgba(74, 222, 128, 0.3);
+    color: var(--color-feature);
+    background: rgba(74, 222, 128, 0.05);
+}
+
+.type-badge.fix {
+    border-color: rgba(96, 165, 250, 0.3);
+    color: var(--color-fix);
+    background: rgba(96, 165, 250, 0.05);
+}
+
+.type-badge.issue {
+    border-color: rgba(248, 113, 113, 0.3);
+    color: var(--color-issue);
+    background: rgba(248, 113, 113, 0.05);
+}
+
+.type-badge.changed {
+    border-color: rgba(192, 132, 252, 0.3);
+    color: var(--color-changed);
+    background: rgba(192, 132, 252, 0.05);
+}
+
+.type-badge.deprecated {
+    border-color: rgba(251, 146, 60, 0.3);
+    color: var(--color-deprecated);
+    background: rgba(251, 146, 60, 0.05);
+}
+
+.type-badge.general {
+    border-color: var(--border-color);
+    color: var(--color-general);
+    background: var(--bg-hover);
+}
+
+/* Quick actions */
+.card-quick-actions {
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+.update-card:hover .card-quick-actions {
+    opacity: 1;
+}
+
+.icon-btn-share {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+}
+
+.icon-btn-share:hover {
+    color: var(--text-primary);
+    background-color: var(--bg-hover);
+}
+
+.icon-btn-share span {
+    font-size: 14px;
+}
+
+/* Changelog Content styling */
+.card-html-content {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+}
+
+.card-html-content p {
+    margin-bottom: 8px;
+}
+.card-html-content p:last-child {
+    margin-bottom: 0;
+}
+
+.card-html-content a {
+    color: var(--text-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.card-html-content a:hover {
+    color: var(--primary);
+}
+
+.card-html-content code {
+    background: var(--bg-hover);
+    border: 1px solid var(--border-color);
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-primary);
+}
+
+.card-html-content ul, .card-html-content ol {
+    margin-left: 18px;
+    margin-bottom: 8px;
+}
+
+.card-html-content li {
+    margin-bottom: 4px;
+}
+
+/* ==========================================================================
+   FLOATING SHARE TOOLBAR (Minimal, bottom center)
+   ========================================================================== */
+.whatsapp-bar {
+    position: fixed;
+    bottom: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 48px);
+    max-width: 600px;
+    background-color: var(--bg-subnav);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px 16px;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    transition: bottom var(--transition-fast);
+}
+
+.whatsapp-bar.visible {
+    bottom: 24px;
+}
+
+.whatsapp-bar-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.selection-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.selection-bullet {
+    font-size: 14px;
+    color: var(--primary);
+}
+
+#selected-count-text {
+    font-size: 13px;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.whatsapp-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* Button flat styling */
+.btn-secondary-flat {
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-primary);
+    padding: 6px 12px;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 12px;
+}
+
+.btn-secondary-flat:hover {
+    background-color: var(--bg-hover);
+}
+
+.btn-primary-flat {
+    background-color: var(--text-primary);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: var(--bg-app);
+    padding: 6px 12px;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-primary-flat:hover {
+    opacity: 0.9;
+}
+
+.btn-whatsapp {
+    background-color: var(--whatsapp);
+    color: white;
+}
+
+.btn-whatsapp:hover {
+    background-color: var(--whatsapp-hover);
+}
+
+/* ==========================================================================
+   MODAL WINDOW (Minimalist overlay)
+   ========================================================================== */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(9, 9, 11, 0.7);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-fast);
+}
+
+.modal.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-content {
+    background-color: var(--bg-navbar);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.close-modal-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+}
+
+.close-modal-btn:hover {
+    color: var(--text-primary);
+}
+
+.modal-body {
+    padding: 18px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.modal-description {
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+.preview-box-container {
+    background: var(--bg-hover);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 10px;
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.preview-box {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-secondary);
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.modal-footer {
+    padding: 12px 18px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
