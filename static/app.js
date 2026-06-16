@@ -28,6 +28,7 @@ const retryBtn = document.getElementById('retry-btn');
 const themeToggleBtn = document.getElementById('theme-toggle-btn');
 const linkedinShareBtn = document.getElementById('linkedin-share-btn');
 const instagramShareBtn = document.getElementById('instagram-share-btn');
+const exportCsvBtn = document.getElementById('export-csv-btn');
 
 // Modal Elements
 const previewModal = document.getElementById('preview-modal');
@@ -119,6 +120,7 @@ function setupEventListeners() {
     whatsappShareBtn.addEventListener('click', shareToWhatsApp);
     linkedinShareBtn.addEventListener('click', shareToLinkedIn);
     instagramShareBtn.addEventListener('click', shareToInstagram);
+    exportCsvBtn.addEventListener('click', exportToCSV);
     whatsappPreviewBtn.addEventListener('click', openPreviewModal);
     
     // Modal
@@ -274,6 +276,15 @@ function renderTimeline() {
             const quickActions = document.createElement('div');
             quickActions.className = 'card-quick-actions';
             
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'icon-btn-share';
+            copyBtn.title = 'Copy raw text';
+            copyBtn.innerHTML = '<span class="material-icons-round">content_copy</span>';
+            copyBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Avoid card toggle
+                copySingleUpdateRaw(entry.date, update);
+            });
+            
             const linkedinBtn = document.createElement('button');
             linkedinBtn.className = 'icon-btn-share';
             linkedinBtn.title = 'Copy and open LinkedIn';
@@ -301,6 +312,7 @@ function renderTimeline() {
                 shareSingleUpdate(entry.date, update);
             });
             
+            quickActions.appendChild(copyBtn);
             quickActions.appendChild(linkedinBtn);
             quickActions.appendChild(instagramBtn);
             quickActions.appendChild(shareBtn);
@@ -651,4 +663,84 @@ function openPreviewModal() {
 
 function closePreviewModal() {
     previewModal.classList.remove('open');
+}
+
+// Copy Single Update raw details
+function copySingleUpdateRaw(date, update) {
+    const mdContent = convertHtmlToWhatsappMarkdown(update.content);
+    const text = `BigQuery Release Notes Update 🚀\n\nDate: ${date}\nType: ${update.type}\nDetails: ${mdContent}`;
+    copyToClipboard(text, "Update copied to clipboard!");
+}
+
+// Export updates to CSV file
+function exportToCSV() {
+    let updatesToExport = [];
+    const hasSelection = (selectedUpdates.size > 0);
+    
+    if (hasSelection) {
+        // Export selected updates only
+        selectedUpdates.forEach(cardId => {
+            const [entryId, updateIdxStr] = cardId.split('_');
+            const updateIdx = parseInt(updateIdxStr);
+            const entry = allReleases.find(e => e.id === entryId);
+            if (entry) {
+                const update = entry.updates[updateIdx];
+                if (update) {
+                    updatesToExport.push({
+                        date: entry.date,
+                        type: update.type,
+                        content: convertHtmlToWhatsappMarkdown(update.content)
+                    });
+                }
+            }
+        });
+    } else {
+        // Export all visible updates matching current filters
+        const visibleCards = document.querySelectorAll('.update-card:not([style*="display: none"])');
+        visibleCards.forEach(card => {
+            const cardId = card.dataset.cardId;
+            const [entryId, updateIdxStr] = cardId.split('_');
+            const updateIdx = parseInt(updateIdxStr);
+            const entry = allReleases.find(e => e.id === entryId);
+            if (entry) {
+                const update = entry.updates[updateIdx];
+                if (update) {
+                    updatesToExport.push({
+                        date: entry.date,
+                        type: update.type,
+                        content: convertHtmlToWhatsappMarkdown(update.content)
+                    });
+                }
+            }
+        });
+    }
+    
+    if (updatesToExport.length === 0) {
+        showToast("No updates available to export.");
+        return;
+    }
+    
+    // Build CSV content
+    let csvContent = "Date,Category,Description\n";
+    updatesToExport.forEach(item => {
+        const escapedDate = `"${item.date.replace(/"/g, '""')}"`;
+        const escapedType = `"${item.type.replace(/"/g, '""')}"`;
+        const escapedContent = `"${item.content.replace(/"/g, '""')}"`;
+        csvContent += `${escapedDate},${escapedType},${escapedContent}\n`;
+    });
+    
+    // Trigger File Download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    
+    const filename = hasSelection ? "bigquery_selected_updates.csv" : "bigquery_changelog_export.csv";
+    link.setAttribute("download", filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    showToast(`Exported ${updatesToExport.length} updates to CSV!`);
 }
